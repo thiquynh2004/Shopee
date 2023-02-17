@@ -1,8 +1,11 @@
+import { setProfile } from './auth'
 /* eslint-disable no-empty */
-import { clearAccessToken, getAccessTokenFromLCSStorage } from './auth'
+import { getAccessTokenFromLCSStorage, setSaveAccessToken, clearLocalStorage } from './auth'
 import { toast } from 'react-toastify'
 import { HttpStatusCode } from './../constant/httpStatusCode'
 import axios, { AxiosInstance } from 'axios'
+import { AuthResponse } from 'src/types/auth.type'
+import { path } from 'src/constant/path'
 
 class Http {
   instance: AxiosInstance
@@ -30,11 +33,15 @@ class Http {
     )
     this.instance.interceptors.response.use(
       (response) => {
-        // const { url } = response.config
-        // if (url !== '/login' || url == '/register') {
-        // } else if (url === '/logout') {
-        //   ;(this.accessToken = ''), clearAccessToken()
-        // }
+        const { url } = response.config
+        if (url === path.login || url == path.register) {
+          const data = response.data as AuthResponse
+          this.accessToken = (response.data as AuthResponse).data.access_token
+          setSaveAccessToken(this.accessToken)
+          setProfile(data.data.user)
+        } else if (url === '/logout') {
+          ;(this.accessToken = ''), clearLocalStorage()
+        }
         return response
       },
       function (error) {

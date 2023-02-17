@@ -1,16 +1,22 @@
 import { useMutation } from '@tanstack/react-query'
 // import _ from 'lodash'
-import React from 'react'
+import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { login } from 'src/api/authAPI'
 import Input from 'src/component/Input'
-import { ResponseAPI } from 'src/types/utils.type'
+import { ErrorResponse } from 'src/types/utils.type'
 import { getRules } from 'src/utils/rules'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { FormData } from '../Register/Register'
 import { toast } from 'react-toastify'
+import { AppContext } from 'src/context/app.context'
+import Button from 'src/component/Button'
+import { path } from 'src/constant/path'
+
 export default function Login() {
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -26,9 +32,12 @@ export default function Login() {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
         toast.success(data.data.message)
+        setIsAuthenticated(true)
+        setProfile(data.data.data.user)
+        navigate('/')
       },
       onError: (error) => {
-        if (isAxiosUnprocessableEntityError<ResponseAPI<FormData>>(error)) {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
           const formError = error.response?.data.data
           // if (formError?.email) {
           //   setError('email', {
@@ -81,12 +90,14 @@ export default function Login() {
                   errorMessage={errors.password?.message}
                 />
                 <div className='flex items-center justify-between'>
-                  <button
+                  <Button
                     className='focus:shadow-outline rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700 focus:outline-none'
                     type='submit'
+                    isLoading={loginMutation.isLoading}
+                    disabled={loginMutation.isLoading}
                   >
                     Sign In
-                  </button>
+                  </Button>
                   <NavLink
                     className='inline-block align-baseline text-sm font-bold text-blue-500 hover:text-blue-800'
                     to='#'
@@ -97,7 +108,7 @@ export default function Login() {
                 <div className='text-center '>
                   <p className='py-2 pr-1 text-center text-xs text-gray-500'>
                     Create your account.
-                    <NavLink to='/register' className='text-decoration-line text-red-600'>
+                    <NavLink to={path.register} className='text-decoration-line text-red-600'>
                       Register
                     </NavLink>
                   </p>

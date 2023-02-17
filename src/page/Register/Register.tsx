@@ -1,21 +1,24 @@
 import { useMutation } from '@tanstack/react-query'
-import _ from 'lodash'
-import React from 'react'
+import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { registerAccount } from 'src/api/authAPI'
 import Input from 'src/component/Input'
-import { ResponseAPI } from 'src/types/utils.type'
+import { ErrorResponse } from 'src/types/utils.type'
 import { getRules } from 'src/utils/rules'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
-
+import _ from 'lodash'
+import { AppContext } from 'src/context/app.context'
+import Button from 'src/component/Button'
 export interface FormData {
   email: string
   password: string
   confirmPassword: string
 }
 export default function Register() {
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -32,11 +35,12 @@ export default function Register() {
     const body = _.omit(data, ['confirmPassword'])
     registerAccountMutation.mutate(body, {
       onSuccess: (data) => {
-        console.log(data)
         toast.success(data.data.message)
+        setProfile(data.data.data.user)
+        setIsAuthenticated(true)
       },
       onError: (error) => {
-        if (isAxiosUnprocessableEntityError<ResponseAPI<Omit<FormData, 'confirmPassword'>>>(error)) {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirmPassword'>>>(error)) {
           const formError = error.response?.data.data
           // if (formError?.email) {
           //   setError('email', {
@@ -100,12 +104,14 @@ export default function Register() {
                   errorMessage={errors.confirmPassword?.message}
                 />
                 <div className='flex items-center justify-between'>
-                  <button
+                  <Button
                     className='focus:shadow-outline rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700 focus:outline-none'
                     type='submit'
+                    isLoading={registerAccountMutation.isLoading}
+                    disabled={registerAccountMutation.isLoading}
                   >
                     Sign Up
-                  </button>
+                  </Button>
                   <NavLink
                     className='inline-block align-baseline text-sm font-bold text-blue-500 hover:text-blue-800'
                     to='#'

@@ -2,25 +2,21 @@ import React, { Fragment } from 'react'
 
 import { Popover, Transition } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useMatch } from 'react-router-dom'
 
 export default function RegisterHeader() {
+  const checkUrl = useMatch('/register')
+  const isRegister = Boolean(checkUrl)
   return (
     <Popover className='relative bg-white px-10'>
       <div className='mx-auto max-w-7xl'>
         <div className='flex items-center justify-between border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10'>
-          <div className='flex justify-start lg:w-0 lg:flex-1'>
+          <div className='flex items-end gap-4 lg:w-0 lg:flex-1'>
             <NavLink to='#'>
               <span className='sr-only'>Your Company</span>
-              <img
-                className='h-8 w-auto sm:h-10'
-                src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600'
-                alt=''
-              />
+              <img className='h-8 w-auto sm:h-10' src='shopee.png' alt='' />
             </NavLink>
-            <NavLink to='#' className='text-base font-medium text-gray-500 hover:text-gray-900'>
-              Docs
-            </NavLink>
+            <h1 className='text-xl font-semibold'>{isRegister ? 'REGISTER' : 'LOGIN'} </h1>
           </div>
 
           <div className='-my-2 -mr-2 md:hidden'>
@@ -31,7 +27,7 @@ export default function RegisterHeader() {
           </div>
           <div className='hidden items-center justify-end md:flex md:flex-1 lg:w-0'>
             <NavLink to='#' className='whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900'>
-              Sign in
+              Anymore questions?
             </NavLink>
           </div>
         </div>

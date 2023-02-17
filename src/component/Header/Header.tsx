@@ -1,143 +1,118 @@
-import { Fragment, useState } from 'react'
-import { Popover, Transition } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import {
   HiOutlineBellAlert,
   HiOutlineQuestionMarkCircle,
   HiOutlineGlobeAlt,
   HiOutlineShoppingCart,
-  HiChevronDown
+  HiChevronDown,
+  HiOutlineArrowRightOnRectangle
 } from 'react-icons/hi2'
-import { useFloating } from '@floating-ui/react'
+import { AppContext } from 'src/context/app.context'
+import { useMutation } from '@tanstack/react-query'
+import { logout } from 'src/api/authAPI'
+import { toast } from 'react-toastify'
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false)
-
-  const { x, y, strategy, refs } = useFloating({
-    open: isOpen,
-    onOpenChange: setIsOpen
+  const { isAuthenticated, setIsAuthenticated, setProfile, profile } = useContext(AppContext)
+  console.log('kdjddd', profile)
+  const logoutMutation = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      setIsAuthenticated(false)
+      setProfile(null)
+      toast.success('Logout is successful')
+    }
   })
+
+  const handleLogout = () => {
+    logoutMutation.mutate()
+  }
   return (
-    <div className=' bg-zinc-800 text-white'>
-      <Popover className='relative px-10 text-white'>
-        <div className='mx-auto max-w-7xl'>
-          <div className='flex items-center justify-between py-2 md:justify-start md:space-x-10'>
-            <div className='hidden items-center justify-start gap-4 text-sm  md:flex md:flex-1 lg:w-0  lg:flex-1'>
-              <div>
-                <NavLink to='#'>Seller Centre</NavLink>
+    <header className='bg-black text-white'>
+      <nav className='border-gray-200 px-4 py-2.5 dark:bg-gray-800 lg:px-6'>
+        <div className='mx-auto flex max-w-screen-xl flex-wrap items-center justify-between'>
+          <div className='hidden items-center  justify-end gap-4 text-sm md:flex md:flex-1 lg:order-2 lg:w-0'>
+            <button className='flex items-center'>
+              <HiOutlineBellAlert />
+              Notifications
+            </button>
+            <NavLink to='#' className='flex items-center'>
+              <HiOutlineQuestionMarkCircle /> Help
+            </NavLink>
+            <NavLink to='#' className='flex items-center'>
+              <HiOutlineGlobeAlt />
+              English <HiChevronDown />
+            </NavLink>
+            {isAuthenticated ? (
+              <div className='flex cursor-pointer items-center' onClick={handleLogout}>
+                <button>{profile?.email}</button>
+                <HiOutlineArrowRightOnRectangle />
               </div>
-              <div>
-                <NavLink to='#'>Join as Seller</NavLink>
-              </div>
-              <div>
-                <NavLink to='#'>Download</NavLink>
-              </div>
-              <div>
-                <NavLink to='#'>Follow us on </NavLink>
-              </div>
+            ) : (
+              <>
+                <NavLink to='/register' className='flex items-center'>
+                  Sign Up
+                </NavLink>
+                <NavLink to='/login' className='flex items-center'>
+                  Sign In
+                </NavLink>
+              </>
+            )}
+
+            <button
+              data-collapse-toggle='mobile-menu-2'
+              type='button'
+              className='ml-1 inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 lg:hidden'
+              aria-controls='mobile-menu-2'
+              aria-expanded='false'
+            >
+              <span className='sr-only'>Open main menu</span>
+              <svg className='h-6 w-6' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
+                <path
+                  fillRule='evenodd'
+                  d='M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z'
+                  clipRule='evenodd'
+                />
+              </svg>
+              <svg
+                className='hidden h-6 w-6'
+                fill='currentColor'
+                viewBox='0 0 20 20'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <path
+                  fillRule='evenodd'
+                  d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z'
+                  clipRule='evenodd'
+                />
+              </svg>
+            </button>
+          </div>
+          <div
+            className='hidden w-full  items-center  justify-start  gap-4  text-sm md:flex md:flex-1 lg:order-1 lg:flex lg:w-0 lg:w-auto lg:flex-1'
+            id='mobile-menu-2'
+          >
+            <div>
+              <NavLink to='#'>Seller Centre</NavLink>
             </div>
-
-            <div className='hidden items-center justify-end gap-4 text-sm md:flex md:flex-1 lg:w-0'>
-              <button className='flex items-center'>
-                <HiOutlineBellAlert />
-                Notifications
-              </button>
-
-              <NavLink to='#' className='flex items-center'>
-                <HiOutlineQuestionMarkCircle /> Help
-              </NavLink>
-              <NavLink to='#' className='flex items-center' ref={refs.setReference}>
-                <HiOutlineGlobeAlt />
-                English
-                <HiChevronDown />
-              </NavLink>
-
-              {isOpen && (
-                <div
-                  ref={refs.setFloating}
-                  style={{
-                    position: strategy,
-                    top: y ?? 0,
-                    left: x ?? 0,
-                    width: 'max-content'
-                  }}
-                >
-                  Tooltip
-                </div>
-              )}
-              <NavLink to='#' className='flex items-center'>
-                Sign Up
-              </NavLink>
-              <NavLink to='#' className='flex items-center'>
-                Sign In
-              </NavLink>
+            <div>
+              <NavLink to='#'>Join as Seller</NavLink>
             </div>
-            <div className='-my-2 -mr-2 md:hidden'>
-              <Popover.Button className='inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500'>
-                <span className='sr-only'>Open menu</span>
-                <Bars3Icon className='h-6 w-6' aria-hidden='true' />
-              </Popover.Button>
+            <div>
+              <NavLink to='#'>Download</NavLink>
+            </div>
+            <div>
+              <NavLink to='#'>Follow us on </NavLink>
             </div>
           </div>
         </div>
-
-        <Transition
-          as={Fragment}
-          enter='duration-200 ease-out'
-          enterFrom='opacity-0 scale-95'
-          enterTo='opacity-100 scale-100'
-          leave='duration-100 ease-in'
-          leaveFrom='opacity-100 scale-100'
-          leaveTo='opacity-0 scale-95'
-        >
-          <Popover.Panel focus className='absolute inset-x-0 top-0 origin-top-right transform p-2 transition md:hidden'>
-            <div className='divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5'>
-              <div className='px-5 pt-5 pb-6'>
-                <div className='flex items-center justify-between'>
-                  <div>
-                    <img
-                      className='h-8 w-auto'
-                      src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600'
-                      alt='Your Company'
-                    />
-                  </div>
-                  <div className='-mr-2'>
-                    <Popover.Button className='inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500'>
-                      <span className='sr-only'>Close menu</span>
-                      <XMarkIcon className='h-6 w-6' aria-hidden='true' />
-                    </Popover.Button>
-                  </div>
-                </div>
-              </div>
-              <div className='space-y-6 py-6 px-5'>
-                <div className='grid grid-cols-2 gap-y-4 gap-x-8'>
-                  <NavLink to='#' className='text-base font-medium text-gray-900 hover:text-gray-700'>
-                    Pricing
-                  </NavLink>
-
-                  <NavLink to='#' className='text-base font-medium text-gray-900 hover:text-gray-700'>
-                    Docs
-                  </NavLink>
-                </div>
-                <div>
-                  <p className='mt-6 text-center text-base font-medium text-gray-500'>
-                    Existing customer?{' '}
-                    <NavLink to='#' className='text-indigo-600 hover:text-indigo-500'>
-                      Sign in
-                    </NavLink>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Popover.Panel>
-        </Transition>
-      </Popover>
-
-      <div className='flex items-center justify-between px-10 py-4 '>
+      </nav>
+      <div className='flex items-center justify-between gap-8 px-10 py-4 pb-8'>
         <div className='flex w-1/6'>
-          <NavLink to='/' className='flex items-center text-2xl'>
-            <img src='shopee.png' alt='shopee' className='h-16 w-16' />
-            Shopee
+          <NavLink to='/' className='flex items-center '>
+            <img src='shopee.png' alt='shopee' />
           </NavLink>
         </div>
         <div className='w-4/6'>
@@ -171,7 +146,7 @@ export default function Header() {
             </div>
             <button
               type='submit'
-              className='ml-2 rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+              className='ml-2 rounded-lg border border-orange-600 bg-orange-600 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
             >
               <svg
                 className='h-5 w-5'
@@ -200,6 +175,6 @@ export default function Header() {
           <HiOutlineShoppingCart />
         </div>
       </div>
-    </div>
+    </header>
   )
 }
