@@ -5,7 +5,7 @@ import ProductItem from './ProductItem'
 
 export default function ProductList() {
   return (
-    <div className='py-6'>
+    <div className='relative py-6'>
       <div className='container px-6'>
         <div className='grid grid-cols-12 gap-6'>
           <div className='col-span-3'>

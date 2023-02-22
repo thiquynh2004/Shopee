@@ -7,7 +7,7 @@ interface Props {
   className?: React.ReactNode
   initialOpen?: boolean
 }
-export default function Popover({ children, renderPopover, className, initialOpen }: Props) {
+export default function Popover({ children, renderPopover }: Props) {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <div>
@@ -23,7 +23,7 @@ export default function Popover({ children, renderPopover, className, initialOpe
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              className='absolute top-10 flex flex-col rounded-sm border border-gray-200 bg-white py-2 px-3 text-black shadow-md'
+              className='absolute top-10 z-40 flex flex-col rounded-sm border border-gray-200 bg-white py-2 px-3 text-black shadow-md'
               variants={{
                 open: {
                   clipPath: 'inset(0% 0% 0% 0% round 10px)',
