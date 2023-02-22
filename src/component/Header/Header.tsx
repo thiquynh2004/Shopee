@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useContext } from 'react'
@@ -7,16 +8,26 @@ import {
   HiOutlineQuestionMarkCircle,
   HiOutlineGlobeAlt,
   HiOutlineShoppingCart,
-  HiChevronDown,
-  HiOutlineArrowRightOnRectangle
+  HiChevronDown
 } from 'react-icons/hi2'
 import { AppContext } from 'src/context/app.context'
 import { useMutation } from '@tanstack/react-query'
 import { logout } from 'src/api/authAPI'
 import { toast } from 'react-toastify'
+
+import { motion, Variants } from 'framer-motion'
+import Popover from '../Popover'
+
+const itemVariants: Variants = {
+  open: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 300, damping: 24 }
+  },
+  closed: { opacity: 0, y: 20, transition: { duration: 0.2 } }
+}
 export default function Header() {
   const { isAuthenticated, setIsAuthenticated, setProfile, profile } = useContext(AppContext)
-  console.log('kdjddd', profile)
   const logoutMutation = useMutation({
     mutationFn: logout,
     onSuccess: () => {
@@ -41,14 +52,87 @@ export default function Header() {
             <NavLink to='#' className='flex items-center'>
               <HiOutlineQuestionMarkCircle /> Help
             </NavLink>
-            <NavLink to='#' className='flex items-center'>
+            <Popover
+              renderPopover={
+                <>
+                  <motion.button
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className='py-2 px-3 hover:text-orange-500'
+                  >
+                    Tiếng Việt
+                  </motion.button>
+                  <motion.button
+                    variants={itemVariants}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className='py-2 px-3 hover:text-orange-500'
+                  >
+                    Tiếng Anh
+                  </motion.button>
+                </>
+              }
+            >
               <HiOutlineGlobeAlt />
-              English <HiChevronDown />
-            </NavLink>
+              English
+              <motion.div
+                variants={{
+                  open: { rotate: 180 },
+                  closed: { rotate: 0 }
+                }}
+                transition={{ duration: 0.2 }}
+                style={{ originY: 0.55 }}
+              >
+                <HiChevronDown />
+              </motion.div>
+            </Popover>
+
             {isAuthenticated ? (
-              <div className='flex cursor-pointer items-center' onClick={handleLogout}>
-                <button>{profile?.email}</button>
-                <HiOutlineArrowRightOnRectangle />
+              <div className='flex cursor-pointer items-center'>
+                <Popover
+                  renderPopover={
+                    <motion.div className='flex flex-col gap-3 px-2 py-2'>
+                      <motion.div
+                        variants={itemVariants}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        className=' hover:text-orange-500'
+                      >
+                        My Account
+                      </motion.div>
+                      <motion.div
+                        variants={itemVariants}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        className=' hover:text-orange-500'
+                      >
+                        My purchase
+                      </motion.div>
+                      <motion.div
+                        variants={itemVariants}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        className=' hover:text-orange-500'
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </motion.div>
+                    </motion.div>
+                  }
+                >
+                  <button>{profile?.email}</button>
+                  <motion.div
+                    variants={{
+                      open: { rotate: 180 },
+                      closed: { rotate: 0 }
+                    }}
+                    transition={{ duration: 0.2 }}
+                    style={{ originY: 0.55 }}
+                  >
+                    <HiChevronDown />
+                  </motion.div>
+                </Popover>
               </div>
             ) : (
               <>
@@ -91,7 +175,7 @@ export default function Header() {
             </button>
           </div>
           <div
-            className='hidden w-full  items-center  justify-start  gap-4  text-sm md:flex md:flex-1 lg:order-1 lg:flex lg:w-0 lg:w-auto lg:flex-1'
+            className='hidden w-full  items-center  justify-start  gap-4  text-sm md:flex md:flex-1 lg:order-1 lg:flex lg:w-0  lg:flex-1'
             id='mobile-menu-2'
           >
             <div>
@@ -146,7 +230,7 @@ export default function Header() {
             </div>
             <button
               type='submit'
-              className='ml-2 rounded-lg border border-orange-600 bg-orange-600 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+              className='ml-2 rounded-lg border border-orange-600 bg-orange-600 p-2.5 text-sm font-medium text-white hover:bg-orange-800 focus:outline-none focus:ring-4 focus:ring-orange-300 dark:bg-blue-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800'
             >
               <svg
                 className='h-5 w-5'
@@ -171,8 +255,106 @@ export default function Header() {
             <p>Dep</p>
           </div>
         </div>
-        <div className='flex w-1/6 justify-center text-4xl'>
-          <HiOutlineShoppingCart />
+        <div className='relative flex w-1/6 justify-center text-4xl'>
+          <Popover
+            renderPopover={
+              <ul className='max-w-md divide-y divide-gray-200 dark:divide-gray-700'>
+                <li className='pb-3 sm:pb-4'>
+                  <div className='flex items-center space-x-4'>
+                    <div className='flex-shrink-0'>
+                      <img
+                        className='h-8 w-8 rounded-full'
+                        src='/docs/images/people/profile-picture-1.jpg'
+                        alt='Neil image'
+                      />
+                    </div>
+                    <div className='min-w-0 flex-1'>
+                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>Neil Sims</p>
+                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>email@flowbite.com</p>
+                    </div>
+                    <div className='inline-flex items-center text-base font-semibold text-gray-900 dark:text-white'>
+                      $320
+                    </div>
+                  </div>
+                </li>
+                <li className='py-3 sm:py-4'>
+                  <div className='flex items-center space-x-4'>
+                    <div className='flex-shrink-0'>
+                      <img
+                        className='h-8 w-8 rounded-full'
+                        src='/docs/images/people/profile-picture-3.jpg'
+                        alt='Neil image'
+                      />
+                    </div>
+                    <div className='min-w-0 flex-1'>
+                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>Bonnie Green</p>
+                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>email@flowbite.com</p>
+                    </div>
+                    <div className='inline-flex items-center text-base font-semibold text-gray-900 dark:text-white'>
+                      $3467
+                    </div>
+                  </div>
+                </li>
+                <li className='py-3 sm:py-4'>
+                  <div className='flex items-center space-x-4'>
+                    <div className='flex-shrink-0'>
+                      <img
+                        className='h-8 w-8 rounded-full'
+                        src='/docs/images/people/profile-picture-2.jpg'
+                        alt='Neil image'
+                      />
+                    </div>
+                    <div className='min-w-0 flex-1'>
+                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>Michael Gough</p>
+                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>email@flowbite.com</p>
+                    </div>
+                    <div className='inline-flex items-center text-base font-semibold text-gray-900 dark:text-white'>
+                      $67
+                    </div>
+                  </div>
+                </li>
+                <li className='py-3 sm:py-4'>
+                  <div className='flex items-center space-x-4'>
+                    <div className='flex-shrink-0'>
+                      <img
+                        className='h-8 w-8 rounded-full'
+                        src='/docs/images/people/profile-picture-5.jpg'
+                        alt='Neil image'
+                      />
+                    </div>
+                    <div className='min-w-0 flex-1'>
+                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>Thomas Lean</p>
+                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>email@flowbite.com</p>
+                    </div>
+                    <div className='inline-flex items-center text-base font-semibold text-gray-900 dark:text-white'>
+                      $2367
+                    </div>
+                  </div>
+                </li>
+                <li className='pt-3 pb-0 sm:pt-4'>
+                  <div className='flex items-center space-x-4'>
+                    <div className='flex-shrink-0'>
+                      <img
+                        className='h-8 w-8 rounded-full'
+                        src='/docs/images/people/profile-picture-4.jpg'
+                        alt='Neil image'
+                      />
+                    </div>
+                    <div className='min-w-0 flex-1'>
+                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>Lana Byrd</p>
+                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>email@flowbite.com</p>
+                    </div>
+                    <div className='inline-flex items-center text-base font-semibold text-gray-900 dark:text-white'>
+                      $367
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            }
+            initialOpen
+          >
+            <HiOutlineShoppingCart />
+          </Popover>
         </div>
       </div>
     </header>
