@@ -12,11 +12,11 @@ import {
 } from 'react-icons/hi2'
 import { AppContext } from 'src/context/app.context'
 import { useMutation } from '@tanstack/react-query'
-import { logout } from 'src/api/authAPI'
 import { toast } from 'react-toastify'
 
 import { motion, Variants } from 'framer-motion'
 import Popover from '../Popover'
+import { authAPI } from 'src/api/authAPI'
 
 const itemVariants: Variants = {
   open: {
@@ -27,9 +27,10 @@ const itemVariants: Variants = {
   closed: { opacity: 0, y: 20, transition: { duration: 0.2 } }
 }
 export default function Header() {
-  const { isAuthenticated, setIsAuthenticated, setProfile, profile } = useContext(AppContext)
+  const { isAuthenticated, setIsAuthenticated, setProfile, profile } =
+    useContext(AppContext)
   const logoutMutation = useMutation({
-    mutationFn: logout,
+    mutationFn: authAPI.logout,
     onSuccess: () => {
       setIsAuthenticated(false)
       setProfile(null)
@@ -153,7 +154,12 @@ export default function Header() {
               aria-expanded='false'
             >
               <span className='sr-only'>Open main menu</span>
-              <svg className='h-6 w-6' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
+              <svg
+                className='h-6 w-6'
+                fill='currentColor'
+                viewBox='0 0 20 20'
+                xmlns='http://www.w3.org/2000/svg'
+              >
                 <path
                   fillRule='evenodd'
                   d='M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z'
@@ -269,8 +275,12 @@ export default function Header() {
                       />
                     </div>
                     <div className='min-w-0 flex-1'>
-                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>Neil Sims</p>
-                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>email@flowbite.com</p>
+                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>
+                        Neil Sims
+                      </p>
+                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>
+                        email@flowbite.com
+                      </p>
                     </div>
                     <div className='inline-flex items-center text-base font-semibold text-gray-900 dark:text-white'>
                       $320
@@ -287,8 +297,12 @@ export default function Header() {
                       />
                     </div>
                     <div className='min-w-0 flex-1'>
-                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>Bonnie Green</p>
-                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>email@flowbite.com</p>
+                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>
+                        Bonnie Green
+                      </p>
+                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>
+                        email@flowbite.com
+                      </p>
                     </div>
                     <div className='inline-flex items-center text-base font-semibold text-gray-900 dark:text-white'>
                       $3467
@@ -305,8 +319,12 @@ export default function Header() {
                       />
                     </div>
                     <div className='min-w-0 flex-1'>
-                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>Michael Gough</p>
-                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>email@flowbite.com</p>
+                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>
+                        Michael Gough
+                      </p>
+                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>
+                        email@flowbite.com
+                      </p>
                     </div>
                     <div className='inline-flex items-center text-base font-semibold text-gray-900 dark:text-white'>
                       $67
@@ -323,8 +341,12 @@ export default function Header() {
                       />
                     </div>
                     <div className='min-w-0 flex-1'>
-                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>Thomas Lean</p>
-                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>email@flowbite.com</p>
+                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>
+                        Thomas Lean
+                      </p>
+                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>
+                        email@flowbite.com
+                      </p>
                     </div>
                     <div className='inline-flex items-center text-base font-semibold text-gray-900 dark:text-white'>
                       $2367
@@ -341,8 +363,12 @@ export default function Header() {
                       />
                     </div>
                     <div className='min-w-0 flex-1'>
-                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>Lana Byrd</p>
-                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>email@flowbite.com</p>
+                      <p className='truncate text-sm font-medium text-gray-900 dark:text-white'>
+                        Lana Byrd
+                      </p>
+                      <p className='truncate text-sm text-gray-500 dark:text-gray-400'>
+                        email@flowbite.com
+                      </p>
                     </div>
                     <div className='inline-flex items-center text-base font-semibold text-gray-900 dark:text-white'>
                       $367

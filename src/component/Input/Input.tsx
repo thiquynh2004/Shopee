@@ -24,7 +24,13 @@ export default function Input({
   const registerResult = register && name ? register(name, rules) : {}
   return (
     <div className={className}>
-      <input className={classNameInput} type={type} autoComplete='on' placeholder={placeholder} {...registerResult} />
+      <input
+        className={classNameInput}
+        type={type}
+        autoComplete='on'
+        placeholder={placeholder}
+        {...registerResult}
+      />
       <p className={classNameError}>{errorMessage}</p>
     </div>
   )

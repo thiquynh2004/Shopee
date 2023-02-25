@@ -3,7 +3,6 @@ import { useMutation } from '@tanstack/react-query'
 import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { login } from 'src/api/authAPI'
 import Input from 'src/component/Input'
 import { ErrorResponse } from 'src/types/utils.type'
 import { getRules } from 'src/utils/rules'
@@ -12,7 +11,8 @@ import { FormData } from '../Register/Register'
 import { toast } from 'react-toastify'
 import { AppContext } from 'src/context/app.context'
 import Button from 'src/component/Button'
-import { path } from 'src/constant/path'
+import { path } from 'src/constants/path'
+import { authAPI } from 'src/api/authAPI'
 
 export default function Login() {
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
@@ -26,7 +26,7 @@ export default function Login() {
   } = useForm<FormData>()
   const rules = getRules(getValues)
   const loginMutation = useMutation({
-    mutationFn: (body: Omit<FormData, 'confirmPassword'>) => login(body)
+    mutationFn: (body: Omit<FormData, 'confirmPassword'>) => authAPI.login(body)
   })
   const onSubmit = handleSubmit((data) => {
     loginMutation.mutate(data, {
@@ -69,8 +69,13 @@ export default function Login() {
         <div className='grid grid-cols-1 py-24 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 lg:pr-10 '>
           <div className='sm:col-span-2 sm:col-start-2 md:col-span-2 md:col-start-2 lg:col-span-2 lg:col-start-4'>
             <div className='w-full '>
-              <form className='mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md' onSubmit={onSubmit}>
-                <h1 className='mb-2 block py-2 text-lg font-bold text-gray-700'>Login</h1>
+              <form
+                className='mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md'
+                onSubmit={onSubmit}
+              >
+                <h1 className='mb-2 block py-2 text-lg font-bold text-gray-700'>
+                  Login
+                </h1>
                 <Input
                   className='mb-4'
                   name='email'
@@ -108,12 +113,17 @@ export default function Login() {
                 <div className='text-center '>
                   <p className='py-2 pr-1 text-center text-xs text-gray-500'>
                     Create your account.
-                    <NavLink to={path.register} className='text-decoration-line text-red-600'>
+                    <NavLink
+                      to={path.register}
+                      className='text-decoration-line text-red-600'
+                    >
                       Register
                     </NavLink>
                   </p>
                 </div>
-                <p className='py-2 text-center text-xs text-gray-500'>©2020 Acme Corp. All rights reserved.</p>
+                <p className='py-2 text-center text-xs text-gray-500'>
+                  ©2020 Acme Corp. All rights reserved.
+                </p>
               </form>
             </div>
           </div>

@@ -16,7 +16,9 @@ export default function RegisterHeader() {
               <span className='sr-only'>Your Company</span>
               <img className='h-8 w-auto sm:h-10' src='shopee.png' alt='' />
             </NavLink>
-            <h1 className='text-xl font-semibold'>{isRegister ? 'REGISTER' : 'LOGIN'} </h1>
+            <h1 className='text-xl font-semibold'>
+              {isRegister ? 'REGISTER' : 'LOGIN'}{' '}
+            </h1>
           </div>
 
           <div className='-my-2 -mr-2 md:hidden'>
@@ -26,7 +28,10 @@ export default function RegisterHeader() {
             </Popover.Button>
           </div>
           <div className='hidden items-center justify-end md:flex md:flex-1 lg:w-0'>
-            <NavLink to='#' className='whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900'>
+            <NavLink
+              to='#'
+              className='whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900'
+            >
               Anymore questions?
             </NavLink>
           </div>
@@ -42,7 +47,10 @@ export default function RegisterHeader() {
         leaveFrom='opacity-100 scale-100'
         leaveTo='opacity-0 scale-95'
       >
-        <Popover.Panel focus className='absolute inset-x-0 top-0 origin-top-right transform p-2 transition md:hidden'>
+        <Popover.Panel
+          focus
+          className='absolute inset-x-0 top-0 origin-top-right transform p-2 transition md:hidden'
+        >
           <div className='divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5'>
             <div className='px-5 pt-5 pb-6'>
               <div className='flex items-center justify-between'>
@@ -63,18 +71,27 @@ export default function RegisterHeader() {
             </div>
             <div className='space-y-6 py-6 px-5'>
               <div className='grid grid-cols-2 gap-y-4 gap-x-8'>
-                <NavLink to='#' className='text-base font-medium text-gray-900 hover:text-gray-700'>
+                <NavLink
+                  to='#'
+                  className='text-base font-medium text-gray-900 hover:text-gray-700'
+                >
                   Pricing
                 </NavLink>
 
-                <NavLink to='#' className='text-base font-medium text-gray-900 hover:text-gray-700'>
+                <NavLink
+                  to='#'
+                  className='text-base font-medium text-gray-900 hover:text-gray-700'
+                >
                   Docs
                 </NavLink>
               </div>
               <div>
                 <p className='mt-6 text-center text-base font-medium text-gray-500'>
                   Existing customer?{' '}
-                  <NavLink to='#' className='text-indigo-600 hover:text-indigo-500'>
+                  <NavLink
+                    to='#'
+                    className='text-indigo-600 hover:text-indigo-500'
+                  >
                     Sign in
                   </NavLink>
                 </p>

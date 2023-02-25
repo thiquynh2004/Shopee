@@ -1,11 +1,15 @@
 import { setProfile } from './auth'
 /* eslint-disable no-empty */
-import { getAccessTokenFromLCSStorage, setSaveAccessToken, clearLocalStorage } from './auth'
+import {
+  getAccessTokenFromLCSStorage,
+  setSaveAccessToken,
+  clearLocalStorage
+} from './auth'
 import { toast } from 'react-toastify'
-import { HttpStatusCode } from './../constant/httpStatusCode'
+import { HttpStatusCode } from '../constants/httpStatusCode'
 import axios, { AxiosInstance } from 'axios'
 import { AuthResponse } from 'src/types/auth.type'
-import { path } from 'src/constant/path'
+import { path } from 'src/constants/path'
 
 class Http {
   instance: AxiosInstance

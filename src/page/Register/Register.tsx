@@ -3,7 +3,6 @@ import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { registerAccount } from 'src/api/authAPI'
 import Input from 'src/component/Input'
 import { ErrorResponse } from 'src/types/utils.type'
 import { getRules } from 'src/utils/rules'
@@ -11,6 +10,7 @@ import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import _ from 'lodash'
 import { AppContext } from 'src/context/app.context'
 import Button from 'src/component/Button'
+import { authAPI } from 'src/api/authAPI'
 export interface FormData {
   email: string
   password: string
@@ -29,7 +29,8 @@ export default function Register() {
   } = useForm<FormData>()
   const rules = getRules(getValues)
   const registerAccountMutation = useMutation({
-    mutationFn: (body: Omit<FormData, 'confirmPassword'>) => registerAccount(body)
+    mutationFn: (body: Omit<FormData, 'confirmPassword'>) =>
+      authAPI.registerAccount(body)
   })
   const onSubmit = handleSubmit((data) => {
     const body = _.omit(data, ['confirmPassword'])
@@ -40,7 +41,11 @@ export default function Register() {
         setIsAuthenticated(true)
       },
       onError: (error) => {
-        if (isAxiosUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirmPassword'>>>(error)) {
+        if (
+          isAxiosUnprocessableEntityError<
+            ErrorResponse<Omit<FormData, 'confirmPassword'>>
+          >(error)
+        ) {
           const formError = error.response?.data.data
           // if (formError?.email) {
           //   setError('email', {
@@ -57,7 +62,8 @@ export default function Register() {
           if (formError) {
             Object.keys(formError).forEach((key) => {
               setError(key as keyof Omit<FormData, 'confirmPassword'>, {
-                message: formError[key as keyof Omit<FormData, 'confirmPassword'>],
+                message:
+                  formError[key as keyof Omit<FormData, 'confirmPassword'>],
                 type: 'Server'
               })
             })
@@ -74,8 +80,13 @@ export default function Register() {
         <div className='grid grid-cols-1 py-20  sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 lg:pr-10 '>
           <div className='sm:col-span-2 sm:col-start-2 md:col-span-2 md:col-start-2 lg:col-span-2 lg:col-start-4'>
             <div className='w-full '>
-              <form className='mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md' onSubmit={onSubmit}>
-                <h1 className='mb-2 block py-2 text-lg font-bold text-gray-700'>Register</h1>
+              <form
+                className='mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md'
+                onSubmit={onSubmit}
+              >
+                <h1 className='mb-2 block py-2 text-lg font-bold text-gray-700'>
+                  Register
+                </h1>
                 <Input
                   className='mb-2'
                   name='email'
@@ -122,13 +133,18 @@ export default function Register() {
                 <div className='text-center '>
                   <p className='py-2 pr-1 text-center text-xs text-gray-500'>
                     Do you already have an account?
-                    <NavLink to='/login' className='text-decoration-line text-red-600'>
+                    <NavLink
+                      to='/login'
+                      className='text-decoration-line text-red-600'
+                    >
                       Login
                     </NavLink>
                   </p>
                 </div>
 
-                <p className='py-2 text-center text-xs text-gray-500'>©2020 Acme Corp. All rights reserved.</p>
+                <p className='py-2 text-center text-xs text-gray-500'>
+                  ©2020 Acme Corp. All rights reserved.
+                </p>
               </form>
             </div>
           </div>
